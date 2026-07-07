@@ -1,6 +1,7 @@
 # Netflix Movies and TV Shows Data Analysis using SQL
 
-![](https://github.com/najirh/netflix_sql_project/blob/main/logo.png)
+<img width="2226" height="678" alt="logo" src="https://github.com/user-attachments/assets/9661bc66-5359-4579-bf02-fa5ec6eb076f" />
+
 
 ## Overview
 This project involves a comprehensive analysis of Netflix's movies and TV shows data using SQL. The goal is to extract valuable insights and answer various business questions based on the dataset. The following README provides a detailed account of the project's objectives, business problems, solutions, findings, and conclusions.
@@ -12,11 +13,6 @@ This project involves a comprehensive analysis of Netflix's movies and TV shows 
 - List and analyze content based on release years, countries, and durations.
 - Explore and categorize content based on specific criteria and keywords.
 
-## Dataset
-
-The data for this project is sourced from the Kaggle dataset:
-
-- **Dataset Link:** [Movies Dataset](https://www.kaggle.com/datasets/shivamb/netflix-shows?resource=download)
 
 ## Schema
 
@@ -51,8 +47,6 @@ FROM netflix
 GROUP BY 1;
 ```
 
-**Objective:** Determine the distribution of content types on Netflix.
-
 ### 2. Find the Most Common Rating for Movies and TV Shows
 
 ```sql
@@ -79,17 +73,14 @@ FROM RankedRatings
 WHERE rank = 1;
 ```
 
-**Objective:** Identify the most frequently occurring rating for each type of content.
-
-### 3. List All Movies Released in a Specific Year (e.g., 2020)
+### 3. List All Movies Released in a Specific Year (e.g., 2021)
 
 ```sql
 SELECT * 
 FROM netflix
-WHERE release_year = 2020;
+WHERE release_year = 2021;
 ```
 
-**Objective:** Retrieve all movies released in a specific year.
 
 ### 4. Find the Top 5 Countries with the Most Content on Netflix
 
@@ -108,7 +99,6 @@ ORDER BY total_content DESC
 LIMIT 5;
 ```
 
-**Objective:** Identify the top 5 countries with the highest number of content items.
 
 ### 5. Identify the Longest Movie
 
@@ -120,19 +110,17 @@ WHERE type = 'Movie'
 ORDER BY SPLIT_PART(duration, ' ', 1)::INT DESC;
 ```
 
-**Objective:** Find the movie with the longest duration.
 
-### 6. Find Content Added in the Last 5 Years
+### 6. Find Content Added in the Last 7 Years
 
 ```sql
 SELECT *
 FROM netflix
-WHERE TO_DATE(date_added, 'Month DD, YYYY') >= CURRENT_DATE - INTERVAL '5 years';
+WHERE TO_DATE(date_added, 'Month DD, YYYY') >= CURRENT_DATE - INTERVAL '7 years';
 ```
 
-**Objective:** Retrieve content added to Netflix in the last 5 years.
 
-### 7. Find All Movies/TV Shows by Director 'Rajiv Chilaka'
+### 7. Find All Movies/TV Shows by Director 'Kirsten Johnson'
 
 ```sql
 SELECT *
@@ -142,21 +130,19 @@ FROM (
         UNNEST(STRING_TO_ARRAY(director, ',')) AS director_name
     FROM netflix
 ) AS t
-WHERE director_name = 'Rajiv Chilaka';
+WHERE director_name = 'Kirsten Johnson';
 ```
 
-**Objective:** List all content directed by 'Rajiv Chilaka'.
 
-### 8. List All TV Shows with More Than 5 Seasons
+### 8. List All TV Shows with More Than 2 Seasons
 
 ```sql
 SELECT *
 FROM netflix
 WHERE type = 'TV Show'
-  AND SPLIT_PART(duration, ' ', 1)::INT > 5;
+  AND SPLIT_PART(duration, ' ', 1)::INT > 2;
 ```
 
-**Objective:** Identify TV shows with more than 5 seasons.
 
 ### 9. Count the Number of Content Items in Each Genre
 
@@ -168,9 +154,7 @@ FROM netflix
 GROUP BY 1;
 ```
 
-**Objective:** Count the number of content items in each genre.
-
-### 10.Find each year and the average numbers of content release in India on netflix. 
+### 10.Find each year and the average numbers of content release in Spain on netflix. 
 return top 5 year with highest avg content release!
 
 ```sql
@@ -180,26 +164,23 @@ SELECT
     COUNT(show_id) AS total_release,
     ROUND(
         COUNT(show_id)::numeric /
-        (SELECT COUNT(show_id) FROM netflix WHERE country = 'India')::numeric * 100, 2
+        (SELECT COUNT(show_id) FROM netflix WHERE country = 'Spain')::numeric * 100, 2
     ) AS avg_release
 FROM netflix
-WHERE country = 'India'
+WHERE country = 'Spain'
 GROUP BY country, release_year
 ORDER BY avg_release DESC
 LIMIT 5;
 ```
 
-**Objective:** Calculate and rank years by the average number of content releases by India.
-
 ### 11. List All Movies that are Documentaries
 
 ```sql
-SELECT * 
-FROM netflix
-WHERE listed_in LIKE '%Documentaries';
+SELECT*
+FROM netflix      
+WHERE listed_In = 'Documentaries'
 ```
 
-**Objective:** Retrieve all movies classified as documentaries.
 
 ### 12. Find All Content Without a Director
 
@@ -209,33 +190,29 @@ FROM netflix
 WHERE director IS NULL;
 ```
 
-**Objective:** List content that does not have a director.
 
-### 13. Find How Many Movies Actor 'Salman Khan' Appeared in the Last 10 Years
+### 13. Find How Many Movies Actor 'Salman Khan' Appeared in the Last 12 Years
 
 ```sql
 SELECT * 
 FROM netflix
 WHERE casts LIKE '%Salman Khan%'
-  AND release_year > EXTRACT(YEAR FROM CURRENT_DATE) - 10;
+  AND release_year > EXTRACT(YEAR FROM CURRENT_DATE) - 12;
 ```
 
-**Objective:** Count the number of movies featuring 'Salman Khan' in the last 10 years.
-
-### 14. Find the Top 10 Actors Who Have Appeared in the Highest Number of Movies Produced in India
+### 14. Find the Top 10 Actors Who Have Appeared in the Highest Number of Movies Produced in Canada
 
 ```sql
 SELECT 
     UNNEST(STRING_TO_ARRAY(casts, ',')) AS actor,
     COUNT(*)
 FROM netflix
-WHERE country = 'India'
+WHERE country = 'Canada'
 GROUP BY actor
 ORDER BY COUNT(*) DESC
 LIMIT 10;
 ```
 
-**Objective:** Identify the top 10 actors with the most appearances in Indian-produced movies.
 
 ### 15. Categorize Content Based on the Presence of 'Kill' and 'Violence' Keywords
 
@@ -254,7 +231,6 @@ FROM (
 GROUP BY category;
 ```
 
-**Objective:** Categorize content as 'Bad' if it contains 'kill' or 'violence' and 'Good' otherwise. Count the number of items in each category.
 
 ## Findings and Conclusion
 
@@ -267,17 +243,8 @@ This analysis provides a comprehensive view of Netflix's content and can help in
 
 
 
-## Author - Zero Analyst
+## Author - DAYFEED
 
 This project is part of my portfolio, showcasing the SQL skills essential for data analyst roles. If you have any questions, feedback, or would like to collaborate, feel free to get in touch!
 
-### Stay Updated and Join the Community
 
-For more content on SQL, data analysis, and other data-related topics, make sure to follow me on social media and join our community:
-
-- **YouTube**: [Subscribe to my channel for tutorials and insights](https://www.youtube.com/@zero_analyst)
-- **Instagram**: [Follow me for daily tips and updates](https://www.instagram.com/zero_analyst/)
-- **LinkedIn**: [Connect with me professionally](https://www.linkedin.com/in/najirr)
-- **Discord**: [Join our community to learn and grow together](https://discord.gg/36h5f2Z5PK)
-
-Thank you for your support, and I look forward to connecting with you!
